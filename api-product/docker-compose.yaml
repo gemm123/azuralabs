@@ -1,0 +1,21 @@
+version: '3'
+services:
+  api-product:
+      build: .
+      ports: 
+        - 8080:8080 
+      environment:
+        - DB_HOST=api-product-postgres
+        - DB_USER=postgres
+        - DB_PASS=postgres
+        - DB_NAME=product
+      depends_on:
+        - api-product-postgres
+  api-product-postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=product
