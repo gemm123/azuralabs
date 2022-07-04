@@ -20,7 +20,7 @@ func NewController(service service.Service) *controller {
 func (ctr *controller) GetAllProduct(c *gin.Context) {
 	products, err := ctr.service.GetAllProduct()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 		return
@@ -47,7 +47,7 @@ func (ctr *controller) GetProductByID(c *gin.Context) {
 
 	product, err := ctr.service.GetProductByID(idInt)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 		return
@@ -83,7 +83,7 @@ func (ctr *controller) PostProduct(c *gin.Context) {
 
 	newProduct, err := ctr.service.CreateProduct(product)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 		return
@@ -93,6 +93,37 @@ func (ctr *controller) PostProduct(c *gin.Context) {
 		ID:          int(newProduct.ID),
 		Name:        newProduct.Name,
 		Description: newProduct.Description,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": productResponse,
+	})
+}
+
+func (ctr *controller) PutProduct(c *gin.Context) {
+	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+
+	var newProduct models.Product
+	if err := c.ShouldBindJSON(&newProduct); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	productChanged, err := ctr.service.UpdateProduct(idInt, newProduct)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	productResponse := models.ProductResponse{
+		ID:          idInt,
+		Name:        productChanged.Name,
+		Description: productChanged.Description,
 	}
 
 	c.JSON(http.StatusOK, gin.H{

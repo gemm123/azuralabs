@@ -14,6 +14,7 @@ type Repository interface {
 	GetAllProduct() ([]models.Product, error)
 	GetProductByID(id int) (models.Product, error)
 	CreateProduct(product models.Product) (models.Product, error)
+	UpdateProduct(product models.Product) (models.Product, error)
 }
 
 func NewRepository(DB *gorm.DB) *repository {
@@ -34,5 +35,10 @@ func (r *repository) GetProductByID(id int) (models.Product, error) {
 
 func (r *repository) CreateProduct(product models.Product) (models.Product, error) {
 	err := r.DB.Create(&product).Error
+	return product, err
+}
+
+func (r *repository) UpdateProduct(product models.Product) (models.Product, error) {
+	err := r.DB.Save(&product).Error
 	return product, err
 }

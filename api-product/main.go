@@ -39,6 +39,7 @@ func main() {
 		api.GET("/product", controller.GetAllProduct)
 		api.POST("/product", controller.PostProduct)
 		api.GET("/product/:id", controller.GetProductByID)
+		api.PUT("/product/:id", controller.PutProduct)
 	}
 
 	r.Run()
