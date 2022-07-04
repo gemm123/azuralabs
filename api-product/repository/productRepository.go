@@ -15,6 +15,7 @@ type Repository interface {
 	GetProductByID(id int) (models.Product, error)
 	CreateProduct(product models.Product) (models.Product, error)
 	UpdateProduct(product models.Product) (models.Product, error)
+	DeleteProduct(product models.Product) error
 }
 
 func NewRepository(DB *gorm.DB) *repository {
@@ -41,4 +42,9 @@ func (r *repository) CreateProduct(product models.Product) (models.Product, erro
 func (r *repository) UpdateProduct(product models.Product) (models.Product, error) {
 	err := r.DB.Save(&product).Error
 	return product, err
+}
+
+func (r *repository) DeleteProduct(product models.Product) error {
+	err := r.DB.Unscoped().Delete(&product).Error
+	return err
 }

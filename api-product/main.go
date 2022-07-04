@@ -40,6 +40,7 @@ func main() {
 		api.POST("/product", controller.PostProduct)
 		api.GET("/product/:id", controller.GetProductByID)
 		api.PUT("/product/:id", controller.PutProduct)
+		api.DELETE("/product/:id", controller.DeleteProduct)
 	}
 
 	r.Run()

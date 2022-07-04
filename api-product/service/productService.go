@@ -14,6 +14,7 @@ type Service interface {
 	GetProductByID(id int) (models.Product, error)
 	CreateProduct(productReq models.Product) (models.Product, error)
 	UpdateProduct(id int, productReq models.Product) (models.Product, error)
+	DeleteProduct(id int) error
 }
 
 func NewService(repositoey repository.Repository) *service {
@@ -46,4 +47,18 @@ func (s *service) UpdateProduct(id int, productReq models.Product) (models.Produ
 
 	newProduct, err := s.repository.UpdateProduct(product)
 	return newProduct, err
+}
+
+func (s *service) DeleteProduct(id int) error {
+	product, err := s.repository.GetProductByID(id)
+	if err != nil {
+		return err
+	}
+
+	err = s.repository.DeleteProduct(product)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -130,3 +130,19 @@ func (ctr *controller) PutProduct(c *gin.Context) {
 		"data": productResponse,
 	})
 }
+
+func (ctr *controller) DeleteProduct(c *gin.Context) {
+	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+
+	if err := ctr.service.DeleteProduct(idInt); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"meesage": "Success deleted product",
+	})
+}
